@@ -123,7 +123,7 @@ if __name__ == "__main__":
     )
     p.add_argument("-i", "--input", required=True, help="input markdown filename")
     p.add_argument(
-        "-t", "--template", default="HUST", required=False, help="template to use"
+        "-t", "--template", default="GZMTU", required=False, help="template to use"
     )
     p.add_argument(
         "--first_line_indent",

@@ -1,13 +1,21 @@
 highlight: true
 
 templates:
-  HUST:
-    reference: "HUST.docx"
+  GZMTU:
+    reference: "gzmtu.docx"
     pandoc_filters:
       - "general.py"
     docx_handlers:
-      HUST: {}
+      GZMTU: {}
       first_line_indent:
         indent_size: 24
+  # HUST:
+  #   reference: "HUST.docx"
+  #   pandoc_filters:
+  #     - "general.py"
+  #   docx_handlers:
+  #     HUST: {}
+  #     first_line_indent:
+  #       indent_size: 24
 
 

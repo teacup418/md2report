@@ -25,7 +25,7 @@ class Config(BaseModel):
     )
     output: str = Field(default="output.docx", description="Output filename.")
     input: str = Field(description="Input filename.")
-    template: str = Field(default="HUST", description="Template config name.")
+    template: str = Field(default="GZMTU", description="Template config name.")
     templates: Dict[str, TemplateConfig] = {}
     first_line_indent: bool = Field(
         default=True, description="Enable the first line indent"
