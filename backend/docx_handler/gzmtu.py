@@ -61,21 +61,30 @@ def add_student_info_table(doc: TDocument):
     for _ in range(2):
         r.add_break()
 
-    table: Table = doc.add_table(rows=5, cols=2)
+    table: Table = doc.add_table(rows=3, cols=4)
     table.style = doc.styles["StudentInfoTable"]
     cell: _Cell
 
-    table.columns[0].cells[0].text = "院系"
-    table.columns[0].cells[1].text = "专业班级"
-    table.columns[0].cells[2].text = "姓名"
-    table.columns[0].cells[3].text = "学号"
-    table.columns[0].cells[4].text = "指导老师"
+    table.columns[0].cells[0].text = "专业班级"
+    table.columns[2].cells[0].text = "实验日期"
+    table.columns[0].cells[1].text = "姓名"
+    table.columns[2].cells[1].text = "学号"
+    table.columns[0].cells[2].text = "实验名称"
+    table.columns[2].cells[2].text = "指导老师"
 
     for cell in table.columns[1].cells:
         cell.width = Inches(3)
         cell.paragraphs[0].style = doc.styles["StudentInfo"]
 
+    for cell in table.columns[3].cells:
+        cell.width = Inches(3)
+        cell.paragraphs[0].style = doc.styles["StudentInfo"]
+
     for cell in table.columns[0].cells:
+        cell.width = Inches(2)
+        cell.paragraphs[0].style = doc.styles["StudentInfo"]
+
+    for cell in table.columns[2].cells:
         cell.width = Inches(2)
         cell.paragraphs[0].style = doc.styles["StudentInfo"]
 
