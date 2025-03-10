@@ -9,8 +9,8 @@ from docx_handler import handler_map
 
 
 class Metadata(BaseModel):
-    title: str = "主标题"
-    subtitle: str = "副标题"
+    title: str = ""
+    subtitle: str = ""
     abstract_zh: str = ""
     abstract_en: str = ""
     author: str = ""
@@ -66,7 +66,7 @@ def convert_md_to_docx(conf: Config):
 
     input_file = pathlib.Path(validate_metadata(str(input_file))).resolve()
 
-    command = ["pandoc", "-s", "--toc"]
+    command = ["pandoc", "-s"]
     template = conf.templates[conf.template]
 
     command.append(str(input_file))

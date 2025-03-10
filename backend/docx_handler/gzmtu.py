@@ -3,13 +3,14 @@ import pathlib
 
 from docx import Document
 from docx.document import Document as TDocument
-from docx.oxml.xmlchemy import _OxmlElementBase
+from docx.oxml.xmlchemy import OxmlElement
 from docx.table import _Cell, Table
 from docx.text.paragraph import Paragraph, Run
 from docx.image.image import Image
 from docx.enum.text import WD_BREAK
 from docx.shared import Inches
 from docx.oxml.ns import qn
+from docx.enum.text import WD_ALIGN_PARAGRAPH
 
 from docx_handler.utils import get_paras_by_style_name
 
@@ -33,6 +34,14 @@ def add_logo(doc: TDocument):
     title._p.addprevious(image_para._p)
 
 
+def add_school_name(doc: TDocument):
+    paras = get_paras_by_style_name(doc, "School")
+    school = doc.add_paragraph("广州航海学院")
+
+def add_course_name(doc: TDocument):
+    paras = get_paras_by_style_name(doc, "Course")
+    course = doc.add_paragraph("实验报告")
+
 def add_student_info_table(doc: TDocument):
     """
     Add the table of student info.
@@ -46,15 +55,18 @@ def add_student_info_table(doc: TDocument):
     The style of table is `StudentInfoTable`, and the style
     of text is `StudentInfo`
     """
-    paras = get_paras_by_style_name(doc, "Subtitle")
-    if len(paras) != 1:
-        logging.error("Subtitle of docx not found")
-    title: Paragraph = paras[0]
+    # paras = get_paras_by_style_name(doc, "Subtitle")
+    # if len(paras) != 1:
+    #     logging.error("Subtitle of docx not found")
+    # title: Paragraph = paras[0]
+    # paras = get_paras_by_style_name(doc, "School")
 
+    school = doc.add_paragraph("广州航海学院")
+    # course = doc.add_paragraph("实验报告")
     front_break: Paragraph = doc.add_paragraph()
     r: Run = front_break.add_run()
     r.add_break()
-    title._p.addprevious(front_break._p)
+    school.insert_paragraph_before(front_break._p)
 
     back_break: Paragraph = doc.add_paragraph()
     r: Run = back_break.add_run()
@@ -88,13 +100,45 @@ def add_student_info_table(doc: TDocument):
         cell.width = Inches(2)
         cell.paragraphs[0].style = doc.styles["StudentInfo"]
 
-    # set table border
-    bottom = table._element.xpath("./w:tblPr/w:tblLook")[0]
-    bottom.set(qn("w:lastColumn"), "1")
-    bottom.set(qn("w:firstRow"), "0")
+    # 遍历表格的每一行
+    for row in table.rows:
+        # 遍历每一行的单元格
+        for idx, cell in enumerate(row.cells):
+            # 获取单元格的边框属性
+            tc = cell._tc
+            tcPr = tc.get_or_add_tcPr()
 
-    title._p.addnext(table._tbl)
-    title._p.addnext(back_break._p)
+            # 创建边框元素
+            tcBorders = OxmlElement('w:tcBorders')
+
+            # 如果是第2列或第4列，设置下边框
+            if idx == 1 or idx == 3:
+                bottom = OxmlElement('w:bottom')
+                bottom.set(qn('w:val'), 'single')
+                bottom.set(qn('w:sz'), '4')
+                bottom.set(qn('w:space'), '0')
+                bottom.set(qn('w:color'), '000000')
+                tcBorders.append(bottom)
+            else:
+                # 如果是第1列或第3列，移除所有边框
+                for border_name in ['top', 'left', 'bottom', 'right']:
+                    border = OxmlElement(f'w:{border_name}')
+                    border.set(qn('w:val'), 'nil')
+                    tcBorders.append(border)
+
+            # 将边框元素添加到单元格属性中
+            tcPr.append(tcBorders)
+            # 如果是第1列或第3列，设置分散对齐
+            if idx == 0 or idx == 2:
+                for paragraph in cell.paragraphs:
+                    paragraph.alignment = WD_ALIGN_PARAGRAPH.DISTRIBUTE
+
+    # # set table border
+    # bottom = table._element.xpath("./w:tblPr/w:tblLook")[0]
+    # bottom.set(qn("w:lastColumn"), "1")
+    # bottom.set(qn("w:firstRow"), "0")
+    school._p.addnext(table._tbl)
+    school._p.addnext(back_break._p)
 
 def replace_top_caption(doc:TDocument):
     """
@@ -109,7 +153,7 @@ def replace_top_caption(doc:TDocument):
 
 def process_gzmtu_docx(filename: str):
     doc: TDocument = Document(filename)
-    add_logo(doc)
+    # add_school_name(doc)
+    # add_course_name(doc)
     add_student_info_table(doc)
-    replace_top_caption(doc)
     doc.save(filename)
