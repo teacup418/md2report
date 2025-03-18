@@ -65,7 +65,7 @@ def convert_md_to_docx(conf: Config):
     input_file: pathlib.Path = pathlib.Path(conf.input).resolve()
 
     input_file = pathlib.Path(validate_metadata(str(input_file))).resolve()
-
+    # -s独立文件
     command = ["pandoc", "-s"]
     template = conf.templates[conf.template]
 

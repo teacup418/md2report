@@ -159,16 +159,16 @@ def set_color(run, color):
     return run
 
 # 复制文件
-shutil.copyfile('./md4report/assets/md4report.docx', './md4report/assets/test.docx')
+# shutil.copyfile('./md4report/assets/md4report.docx', './md4report/assets/test.docx')
 
 # 打开复制后的docx文件
-doc = Document('./md4report/assets/test.docx')
+doc = Document('./md4report/tests/teacup.docx')
 
 starter = doc.paragraphs[0]  # 定位到内容开头
 
-info = ["专业班级", "计科666", "实验日期", "2025.01.01", "姓名", "派蒙", "学号", "202515210101", "实验名称", "清华拳实战", "指导老师", "辅导员"]
+info = ["专业班级", "计科222", "实验日期", "2025.03.16", "姓名", "钟尹泽", "学号", "202215210229", "实验名称", "实验1.Python图像处理编程基础", "指导老师", "陈宇环"]
 
-meta = {"school": "广州航海学院", "course": "    《CS50》    ", "score": "100", "info": info}
+meta = {"school": "广州航海学院", "course": "    数字图像处理及应用实验    ", "score": "", "info": info}
 
 work = [
     make_school(doc, meta["school"]),
@@ -185,4 +185,4 @@ for w in work:
     starter._element.addprevious(w._element)
 
 # 保存修改后的文档
-doc.save('./md4report/assets/test.docx')
+doc.save('./md4report/tests/teacup.docx')
