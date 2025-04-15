@@ -53,6 +53,7 @@ def validate_metadata(filename: str):
 
 
 def convert_md_to_docx(conf: Config):
+    # 文件路径
     filter_path: pathlib.Path = pathlib.Path(__file__).parent.resolve() / "filters"
     reference_path: pathlib.Path = (
         pathlib.Path(__file__).parent.resolve() / "reference-docs"
@@ -68,17 +69,17 @@ def convert_md_to_docx(conf: Config):
     # -s独立文件
     command = ["pandoc", "-s"]
     template = conf.templates[conf.template]
-
+    # 添加输入文件的路径
     command.append(str(input_file))
-
+    # 添加模板文件的路径
     command.extend(["--reference-doc", str(reference_path / template.reference)])
-
+    # 添加过滤器路径
     for f in conf.templates[conf.template].pandoc_filters:
         command.extend(["--filter", str(filter_path / f)])
-
+    # 高亮模式
     if not conf.highlight:
         command.extend(["--highlight-style", "monochrome"])
-
+    # 输出路径
     command.extend(["-o", str(output_path.absolute())])
     subprocess.run(command, cwd=input_path)
 

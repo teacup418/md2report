@@ -1,0 +1,5 @@
+configs:
+  exp:
+    ref: "GZMTU.docx"
+    filters: []
+    handlers: "common/general_handler"

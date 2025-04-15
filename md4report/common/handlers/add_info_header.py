@@ -1,10 +1,12 @@
 from docx import Document
-import shutil
+# import shutil
 from docx.shared import Inches, Pt, RGBColor
 from docx.enum.table import WD_TABLE_ALIGNMENT
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
+import os
+
 
 def make_school(doc, school: str):
     # 二号字体22磅
@@ -161,28 +163,65 @@ def set_color(run, color):
 # 复制文件
 # shutil.copyfile('./md4report/assets/md4report.docx', './md4report/assets/test.docx')
 
-# 打开复制后的docx文件
-doc = Document('./md4report/tests/teacup.docx')
+# # 打开复制后的docx文件
+# doc = Document('./md4report/tests/teacup.docx')
 
-starter = doc.paragraphs[0]  # 定位到内容开头
+# starter = doc.paragraphs[0]  # 定位到内容开头
 
-info = ["专业班级", "计科222", "实验日期", "2025.03.16", "姓名", "钟尹泽", "学号", "202215210229", "实验名称", "实验1.Python图像处理编程基础", "指导老师", "陈宇环"]
+# info = ["专业班级", "计科222", "实验日期", "2025.04.03", "姓名", "钟尹泽", "学号", "202215210229", "实验名称", "实验2.空域图像增强", "指导老师", "华国光"]
 
-meta = {"school": "广州航海学院", "course": "    数字图像处理及应用实验    ", "score": "", "info": info}
+# meta = {"school": "广州航海学院", "course": "    数字图像处理及应用实验    ", "score": "", "info": info}
 
-work = [
-    make_school(doc, meta["school"]),
-    make_course(doc, meta["course"]),
-    make_score(doc),
-    make_div(doc),
-    make_div(doc),
-    make_info(doc, meta["info"]),
-    make_div(doc, True),
-]
+# job = [
+#     make_school(doc, meta["school"]),
+#     make_course(doc, meta["course"]),
+#     make_score(doc),
+#     make_div(doc),
+#     make_div(doc),
+#     make_info(doc, meta["info"]),
+#     make_div(doc, True),
+# ]
 
-# 将段落插入到文档开头前，相关用法见“lxml”python库。
-for w in work:
-    starter._element.addprevious(w._element)
+# # 将段落插入到文档开头前，相关用法见“lxml”python库。
+# for w in job:
+#     starter._element.addprevious(w._element)
 
-# 保存修改后的文档
-doc.save('./md4report/tests/teacup.docx')
+# # 保存修改后的文档
+# doc.save('./md4report/tests/teacup.docx')
+
+
+def worker(metadata, file):
+
+    doc = Document(file)
+    starter = doc.paragraphs[0]  # 定位到内容开头
+    info = [
+        "专业班级", metadata["专业班级"],
+        "实验日期", metadata["实验日期"],
+        "姓名", metadata["姓名"],
+        "学号", metadata["学号"],
+        "实验名称", metadata["实验名称"],
+        "指导老师", metadata["指导老师"],
+        ]
+
+    meta = {
+        "学校": metadata["学校"],
+        "课程": metadata["课程"],
+        "info": info
+    }
+
+    jobs = [
+        make_school(doc, meta["学校"]),
+        make_course(doc, meta["课程"]),
+        make_score(doc),
+        make_div(doc),
+        make_div(doc),
+        make_info(doc, meta["info"]),
+        make_div(doc, True),
+    ]
+
+    # 将段落插入到文档开头前，相关用法见“lxml”python库。
+    for job in jobs:
+        starter._element.addprevious(job._element)
+
+    # 保存修改后的文档
+    doc.save(os.path.abspath(file))

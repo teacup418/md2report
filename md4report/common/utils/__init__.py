@@ -1,0 +1,1 @@
+from .m4r_metadata import get_metadata

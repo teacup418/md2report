@@ -1,0 +1,6 @@
+name: "通用实验模板"
+description: "适用于大部分学校的实验模板"
+jobs:
+  ref: "exp.docx"
+  filters: []
+  handlers: ["add_info_header.py"]
